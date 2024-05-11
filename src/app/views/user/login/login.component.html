@@ -1,0 +1,48 @@
+<section class="login" [formGroup]="loginForm">
+
+  <div class="container">
+    <div class="auth-form">
+      <div class="auth-title">
+        Войти в личный кабинет
+      </div>
+
+      <div class="auth-inputs">
+        <div class="auth-input">
+          <input type="email" class="input" id="email"
+                 [ngStyle]="getInputStyle('email')"
+                 placeholder="Электронная почта"
+                 formControlName="email">
+          <label class="wrong-label" *ngIf="isInputInvalid('email')">
+            Email должен быть корректным
+          </label>
+        </div>
+        <div class="auth-input">
+          <input type="password" class="input"
+                 [ngStyle]="getInputStyle('password')"
+                 placeholder="Пароль"
+                 formControlName="password">
+          <label class="wrong-label" *ngIf="isInputInvalid('password')">
+            Пароль: минимум 8 символов, 1 заглавная буква, 1 цифра
+          </label>
+        </div>
+
+
+        <div class="auth-checkbox">
+          <input type="checkbox" id="remember" formControlName="rememberMe">
+          <label for="remember">Запомнить меня</label>
+        </div>
+      </div>
+      <div class="auth-btn">
+
+        <button class="btn" [disabled]="loginForm.invalid" (click)="login()">Войти</button>
+      </div>
+      <div class="auth-link">
+        Нет аккаунта? <a routerLink="/signup">Зарегистрируйтесь</a>
+      </div>
+    </div>
+    <div class="page-img">
+      <img src="/assets/images/user/login-img.png" alt="login-img">
+    </div>
+  </div>
+</section>
+

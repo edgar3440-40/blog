@@ -1,0 +1,59 @@
+<section class="signup" [formGroup]="signupForm" >
+<!--  [formGroup]="signupForm" appPasswordRepeat-->
+  <div class="container">
+    <div class="auth-form">
+      <div class="auth-title">
+        Регистрация на сайте
+      </div>
+
+
+      <div class="auth-inputs">
+        <div class="auth-input">
+          <input type="email" class="input" id="name"
+                 [ngStyle]="getInputStyle('name')"
+                 placeholder="Ваше имя"
+                 formControlName="name">
+          <label class="wrong-label" *ngIf="isInputInvalid('name')">
+            Имя: русские буквы, пробелы, каждое слово с заглавной.
+          </label>
+        </div>
+        <div class="auth-input">
+          <input type="email" class="input" id="email"
+                 [ngStyle]="getInputStyle('email')"
+                 placeholder="Электронная почта"
+                 formControlName="email">
+          <label class="wrong-label" *ngIf="isInputInvalid('email')">
+            Email должен быть корректным
+          </label>
+        </div>
+        <div class="auth-input">
+          <input type="password" class="input"
+                 [ngStyle]="getInputStyle('password')"
+                 placeholder="Пароль"
+                 formControlName="password">
+          <label class="wrong-label" *ngIf="isInputInvalid('password')">
+            Пароль: минимум 8 символов, 1 заглавная буква, 1 цифра
+          </label>
+        </div>
+
+
+        <div class="auth-checkbox">
+          <input type="checkbox" id="agree" formControlName="agree">
+          <label for="agree">
+            Я принимаю <a href="#">условия пользовательского соглашения</a> и даю <a href="#">согласие на обработку персональных данных.</a>
+          </label>
+        </div>
+      </div>
+      <div class="auth-btn">
+        <button class="btn" [disabled]="signupForm.invalid" (click)="signup()" >Зарегистрироваться</button>
+
+      </div>
+      <div class="auth-link">
+        Нет аккаунта? <a routerLink="/login">Войдите</a>
+      </div>
+    </div>
+    <div class="page-img">
+      <img src="/assets/images/user/signup-img.png" alt="login-img">
+    </div>
+  </div>
+</section>

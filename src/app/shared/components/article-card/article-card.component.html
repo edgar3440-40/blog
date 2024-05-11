@@ -1,0 +1,31 @@
+
+
+<div class="article-card">
+  <div class="article-img-title-container">
+    <div class="article-card-img" *ngIf="usual" style="background-image: url({{serverStaticPath + article.image}})"></div>
+    <div class="article-card-img" *ngIf="!usual"  style="background-image: url({{article.image}})"></div>
+
+    <div class="article-card-title">
+      {{article.title}}
+    </div>
+  </div>
+
+    <div class="article-card-desc">
+      {{article.description}}
+    </div>
+
+  <div class="article-card-info" *ngIf="isOnMain && !usual">
+    <div class="article-card-price" >
+      От {{article?.price}}
+    </div>
+    <a class="btn article-card-detail-action" *ngIf="!usual" (click)="modalIsCalled(article.title)">
+      Подробнее
+    </a>
+  </div>
+
+    <a [routerLink]="'/article/' + article.url" class="read-more" *ngIf="usual">
+      Читать дальше
+    </a>
+
+  <div class="article-card-category" *ngIf="usual">{{article.category}}</div>
+  </div>

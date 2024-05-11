@@ -1,0 +1,41 @@
+.articles-filter-item {
+  margin-bottom: 14px;
+  height: 31px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  cursor: pointer;
+
+  .articles-filter-item-input {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    visibility: hidden;
+  }
+  .articles-filter-item-label {
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+
+    .articles-filter-name.active {
+      color: black;
+    }
+
+    a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 12px;
+    }
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  &.active {
+    color: #313131;
+  }
+}

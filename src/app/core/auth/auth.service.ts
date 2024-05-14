@@ -58,6 +58,7 @@ export class AuthService {
   public removeTokens(): void {
     localStorage.removeItem(this.accessTokenKey);
     localStorage.removeItem(this.refreshTokenKey);
+    localStorage.removeItem('userName');
     this.isLogged = false;
     this.isLogged$.next(false);
   }

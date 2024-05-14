@@ -25,9 +25,13 @@ export class CatalogComponent implements OnInit {
   activeParams: ActiveParamsType = {categories: []};
   pages: number[] = [];
 
+  activeFlag: boolean = false;
+  filterUrlParam: string = '';
+
   constructor(private articleService: ArticleService, private categoriesService: CategoriesService,
               private activatedRoute: ActivatedRoute,
-              private router: Router) { }
+              private router: Router) {
+  }
 
   ngOnInit(): void {
 
@@ -55,7 +59,6 @@ export class CatalogComponent implements OnInit {
                 }
               }
             })
-            console.log(this.appliedFilters)
             this.articleService.getArticles(this.activeParams)
               .subscribe({
                 next: (data: ArticlesArrayType) => {
@@ -63,7 +66,6 @@ export class CatalogComponent implements OnInit {
                   for (let i = 1; i <= data.pages; i++) {
                     this.pages.push(i);
                   }
-                  console.log(this.pages);
                   this.articles = data as ArticlesArrayType;
                 }
               })
@@ -71,7 +73,13 @@ export class CatalogComponent implements OnInit {
       })
   }
 
-  removeAppliedFilter(appliedFilter: AppliedFilterType) {
+  updateActive(newActive: boolean) {
+    this.activeFlag = newActive;
+  }
+
+  removeAppliedFilter(appliedFilter: AppliedFilterType, activeFlag: boolean) {
+
+    this.activeFlag = activeFlag;
 
     this.activeParams.categories = this.activeParams.categories.filter(filter => filter !== appliedFilter.urlParam)
 
@@ -87,7 +95,6 @@ export class CatalogComponent implements OnInit {
   }
 
   getIfOneOfCategoriesChosen(value: any) {
-    console.log(value)
    return this.filterOpen = value as boolean;
   }
 
@@ -110,7 +117,6 @@ export class CatalogComponent implements OnInit {
   }
   openPage(page: number) {
     this.activeParams.page = page;
-    console.log(page);
     this.router.navigate(['/articles'], {
       queryParams: this.activeParams
     });

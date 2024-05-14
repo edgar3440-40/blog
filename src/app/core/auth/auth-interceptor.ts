@@ -19,7 +19,6 @@ export class AuthInterceptor implements HttpInterceptor {
 
     const tokens = this.authService.getTokens();
     if(tokens && tokens.accessToken) {
-      console.log(tokens.accessToken)
       const authReq = req.clone({
         headers: req.headers.set('x-auth', tokens.accessToken)
       });

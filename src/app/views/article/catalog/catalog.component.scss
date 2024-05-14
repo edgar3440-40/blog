@@ -96,7 +96,9 @@
     .articles-content-items {
       display: flex;
       column-gap: 25px;
-      row-gap: 40px;
+      justify-content: flex-start;
+      align-items: baseline;
+      row-gap: 60px;
       flex-wrap: wrap;
     }
   }

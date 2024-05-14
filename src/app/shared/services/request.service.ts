@@ -11,10 +11,6 @@ export class RequestService {
 
   constructor(private http: HttpClient) { }
 
-
-
-  
-
   doRequest(name: string, phone: string, service: string, type: string): Observable<DefaultResponseType> {
     return this.http.post<DefaultResponseType>(environment.api + 'requests', {name, phone, service, type})
   }

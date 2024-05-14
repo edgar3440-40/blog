@@ -10,7 +10,7 @@
         <div class="articles-applied-filters">
           <div class="articles-applied-filter" *ngFor="let appliedFilter of appliedFilters">
             <span>{{appliedFilter.name}}</span>
-            <a (click)="removeAppliedFilter(appliedFilter)">
+            <a (click)="removeAppliedFilter(appliedFilter, false)" >
               <svg width="14" height="15" viewBox="0 0 14 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <line x1="0.935531" y1="1.15002" x2="12.9563" y2="13.1708" stroke="#709FDC" stroke-linecap="round"/>
                 <line x1="12.9236" y1="1.12984" x2="0.902784" y2="13.1507" stroke="#709FDC" stroke-linecap="round"/>
@@ -20,7 +20,7 @@
           </div>
         </div>
 
-        <div class="articles-filter" (filterOpen)="getIfOneOfCategoriesChosen($event)"  [class.open]="filterOpen" >
+        <div class="articles-filter"   [class.open]="filterOpen" >
           <div class="articles-filter-head" (click)="toggleFilter()">
             <span>Фильтр</span>
             <svg width="16" height="8" viewBox="0 0 16 8" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -28,7 +28,7 @@
             </svg>
           </div>
           <div class="articles-filter-body">
-            <category-filter [category]="category" [index]="i"  *ngFor="let category of categories; let i = index;"></category-filter>
+            <category-filter   [category]="category" [activeFlag]="activeFlag"  [index]="i"  *ngFor="let category of categories; let i = index;"></category-filter>
           </div>
         </div>
 

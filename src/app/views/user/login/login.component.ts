@@ -4,6 +4,8 @@ import {AuthService} from "../../../core/auth/auth.service";
 import {LoginResponseType} from "../../../../types/login-response.type";
 import {DefaultResponseType} from "../../../../types/default-response.type";
 import {Router} from "@angular/router";
+import {MatSnackBar} from "@angular/material/snack-bar";
+import {HttpErrorResponse} from "@angular/common/http";
 
 @Component({
   selector: 'app-login',
@@ -12,7 +14,7 @@ import {Router} from "@angular/router";
 })
 export class LoginComponent implements OnInit {
 
-  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) { }
+  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router, private _snackBar: MatSnackBar) { }
 
   loginForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
@@ -54,6 +56,13 @@ export class LoginComponent implements OnInit {
             this.authService.userId = loginResponse.userId;
 
             this.router.navigate(['/']);
+          },
+          error: (error: HttpErrorResponse) => {
+            if(error.error && error.error.message) {
+              this._snackBar.open(error.error.message);
+            } else {
+              this._snackBar.open('Error during the authorization');
+            }
           }
         })
 

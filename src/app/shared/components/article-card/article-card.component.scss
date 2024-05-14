@@ -2,12 +2,16 @@
 
 .article-card {
   width: 291px;
-  height: 510px;
+  height: 571px;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: baseline;
   justify-content: space-between;
   position: relative;
+
+  &.unusual {
+    height: 510px !important;
+  }
 
   .article-img-title-container {
     width: 100%;

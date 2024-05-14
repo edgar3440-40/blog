@@ -24,4 +24,11 @@ export class ArticleService {
       params: params
     })
   }
+  getArticle(url: string): Observable<ArticleType | DefaultResponseType> {
+    return this.http.get<ArticleType>(environment.api + 'articles/' + url)
+  }
+
+  getRelatedArticles(url: string): Observable<ArticleType[] | DefaultResponseType> {
+    return this.http.get<ArticleType[] | DefaultResponseType>(environment.api + 'articles/related/' + url)
+  }
 }

@@ -1,6 +1,6 @@
 
 
-<div class="article-card">
+<div class="article-card" [class.unusual]="!usual">
   <div class="article-img-title-container">
     <div class="article-card-img" *ngIf="usual" style="background-image: url({{serverStaticPath + article.image}})"></div>
     <div class="article-card-img" *ngIf="!usual"  style="background-image: url({{article.image}})"></div>
@@ -23,7 +23,7 @@
     </a>
   </div>
 
-    <a [routerLink]="'/article/' + article.url" class="read-more" *ngIf="usual">
+    <a [routerLink]="'/articles/' + article.url" class="read-more" *ngIf="usual">
       Читать дальше
     </a>
 

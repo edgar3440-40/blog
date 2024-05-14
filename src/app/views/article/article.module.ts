@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import {ReactiveFormsModule} from "@angular/forms";
+import {CommonModule, DatePipe} from '@angular/common';
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { ArticleRoutingModule } from './article-routing.module';
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
@@ -16,8 +16,12 @@ import {DetailComponent} from "./detail/detail.component";
   ],
   imports: [
     CommonModule,
+    FormsModule,
     SharedModule,
     ArticleRoutingModule
+  ],
+  providers: [
+    DatePipe
   ]
 })
 export class ArticleModule { }

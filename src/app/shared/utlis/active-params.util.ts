@@ -13,7 +13,6 @@ export class ActiveParamsUtil {
       activeParams.page = +params['page'] ;
 
       // adding console to check
-      console.log(activeParams.page);
     }
 
     return activeParams;

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {debounceTime} from "rxjs";
+import {debounceTime, of} from "rxjs";
 import {ActiveParamsUtil} from "../../../shared/utlis/active-params.util";
 import {ActiveParamsType} from "../../../../types/active-params.type";
 import {ArticleService} from "../../../shared/services/article.service";
@@ -34,8 +34,12 @@ export class DetailComponent implements OnInit {
 
   comments!: CommentType;
   commentInput: string = '';
+  noCommentsFlag: boolean = false;
 
   loadMoreBtnFlag: boolean = false;
+  loadMoreClickTimes: number = 0;
+  offset: number = 3;
+  commentsCount: number = 0;
 
   constructor(private articleService: ArticleService,
               private activatedRoute: ActivatedRoute,
@@ -69,10 +73,13 @@ export class DetailComponent implements OnInit {
               this._snackBar.open('There was an error trying to get the info about the chosen article, please try later!');
             }
             this.article = data as ArticleType;
+            this.commentsCount = this.article.commentsCount as number;
 
             // checking for load more btn to knmow how many comments do we havw
-            if(this.article && (this.article.commentsCount as number) > 3) {
+            if(this.article && (this.commentsCount as number) > 3) {
               this.loadMoreBtnFlag = true;
+            } else if((this.commentsCount as number) === 0) {
+              this.noCommentsFlag = true;
             }
             this.activeParamsComment.article = this.article.id;
 
@@ -98,11 +105,7 @@ export class DetailComponent implements OnInit {
         })
     })
 
-
-
   }
-
-
 
   sendComment(text: string) {
     if((this.article as ArticleType)  && this.article.id) {
@@ -115,23 +118,26 @@ export class DetailComponent implements OnInit {
             this.commentInput = '';
 
             this._snackBar.open(data.message);
-            this.commentService.getComments(this.activeParamsComment)
-              .subscribe({
-                next: (commentData: DefaultResponseType | CommentType) => {
-                  if((commentData as DefaultResponseType).error !== undefined) {
-                    this._snackBar.open((commentData as DefaultResponseType).message)
-                  }
-                  this.comments = commentData as CommentType;
-                  if(this.article && this.article.comments) {
-                    this.article.comments = [];
+            if((this.commentsCount as number) === 0) {
+              this.getComments(1, 0);
+              this.commentsCount++;
+            } else if((this.commentsCount as number) === 1) {
 
-                    for (let i = 0; i < 3; i++) {
-                      this.article.comments.push(this.comments.comments[i]);
-                    }
-                  }
+              this.getComments(1, 0);
+              this.commentsCount++;
+            } else if((this.commentsCount as number) === 2) {
 
-                }
-              })
+              this.getComments(1, 0);
+              this.commentsCount++;
+            } else if((this.commentsCount as number) === 3) {
+              this.loadMoreBtnFlag = true;
+              this.getComments(1, 1);
+              this.commentsCount++;
+            } else {
+              this.getComments(1, this.commentsCount - 3);
+              this.commentsCount++;
+            }
+
           },
           error: (error: HttpErrorResponse) => {
             this._snackBar.open(error.error.message)
@@ -155,16 +161,60 @@ export class DetailComponent implements OnInit {
   }
 
   loadMoreComments() {
-    this.activeParamsComment.offset = 3;
+    // Increment the click counter
+    this.loadMoreClickTimes++;
+
+    const totalComments = this.commentsCount as number;
+    const remainingComments = totalComments - this.offset;
+    if (totalComments === 0) {
+      this.loadMoreBtnFlag = false;
+      return;
+    }
+    // If there are fewer than or equal to 3 comments initially
+    if (totalComments <= 3) {
+      this.loadMoreBtnFlag = false;
+      return;
+    }
+    // Checking if the remaining comments are fewer than 10
+    if (remainingComments < 10) {
+      // Load the remaining comments and hide the "Load More" button
+      this.getComments(remainingComments, this.offset);
+      this.loadMoreBtnFlag = false;
+      console.log('Comments are over');
+    } else if (this.offset < totalComments) {
+      // For the first click, loading the first 10 comments starting from the third
+      if (this.loadMoreClickTimes === 1) {
+        this.getComments(10, 3);
+      } else {
+        // For subsequent clicks, updating the offset and load the next batch of 10 comments
+        this.offset += 10;
+        this.getComments(10, this.offset - 10);
+      }
+    }
+  }
+
+  getComments(cycleLength: number, offset: number) {
+    if(offset) {
+      this.activeParamsComment.offset = offset;
+    }
     this.commentService.getComments(this.activeParamsComment)
       .subscribe({
-        next: (data) => {
+        next: (commentData: DefaultResponseType | CommentType) => {
+          if((commentData as DefaultResponseType).error !== undefined) {
+            this._snackBar.open((commentData as DefaultResponseType).message)
+          }
+          this.comments = commentData as CommentType;
+
+          // if(this.commentsCount > 4) {
+          //   this.article.comments = this.comments.comments;
+          // }
+           if(this.article && this.article.comments) {
+              for (let i = 0; i < cycleLength; i++) {
+                this.article.comments.push(this.comments.comments[i]);
+              }
+          }
 
         }
       })
-  }
-
-  getComments() {
-
   }
 }

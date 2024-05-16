@@ -90,12 +90,14 @@
         </div>
 
         <div class="detail-comment-form">
+          <div class="no-comment" *ngIf="noCommentsFlag">Будьте первым, кто оставит свой комментарий к статье!</div>
+
           <textarea class="detail-comment-input" [(ngModel)]="commentInput"  #input placeholder="Напишите Ваш комментарий к статье..."></textarea>
           <button class="btn detail-comment-btn" (click)="sendComment(input.value)">Опубликовать комментарий</button>
         </div>
 
         <div class="detail-comments-items">
-          <div class="detail-comments-item" *ngFor="let comment of article.comments">
+          <div class="detail-comments-item"  *ngFor="let comment of article.comments" >
             <div class="detail-comments-item-user">
               <div class="detail-comments-item-img">
                 <svg width="44" height="45" viewBox="0 0 44 45" fill="none" xmlns="http://www.w3.org/2000/svg">

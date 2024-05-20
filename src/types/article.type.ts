@@ -1,3 +1,5 @@
+import {SingleCommentType} from "./comment.type";
+
 export type ArticleType = {
   id?: string,
   title: string,
@@ -9,17 +11,7 @@ export type ArticleType = {
   price?: number;
 
   text?: string
-  comments?: {
-      id: string,
-      text: string,
-      date: string,
-      likesCount: number,
-      dislikesCount: number,
-      user: {
-        id: string,
-        name: string
-      }
-    }[],
+  comments?: SingleCommentType[],
   commentsCount?: number,
 
 

@@ -1,16 +1,19 @@
 export type CommentType = {
   allCount: number
-  comments: {
-      id: string,
-      text: string,
-      date: string,
-      likesCount: number,
-      dislikesCount: number,
-      user: {
-        id: string,
-        name: string
-      }
-    }[],
-
-
+  comments: SingleCommentType[],
 }
+
+export type SingleCommentType = {
+  id: string,
+  text: string,
+  date: string,
+  likesCount: number,
+  dislikesCount: number,
+  liked?: boolean,
+  disliked?: boolean,
+  user: {
+    id: string,
+    name: string
+  }
+}
+

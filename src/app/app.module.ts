@@ -17,6 +17,7 @@ import {MatMenuModule} from "@angular/material/menu";
 import {CarouselModule} from "ngx-owl-carousel-o";
 import {CommonModule} from "@angular/common";
 import {MainComponent} from "./views/main/main.component";
+import { PolicyComponent } from './views/policy/policy.component';
 
 
 @NgModule({
@@ -27,6 +28,7 @@ import {MainComponent} from "./views/main/main.component";
     FooterComponent,
     LayoutComponent,
     LoginComponent,
+    PolicyComponent,
   ],
   imports: [
     BrowserModule,

@@ -42,12 +42,15 @@
           line-height: 130%;
           letter-spacing: 1px;
           cursor: pointer;
+          text-decoration: none;
+
+          &.active {
+            color: $blue-text-color;
+          }
         }
       }
     }
-    .phone-number {
-      margin-right: 133px;
-    }
+
     .header-login {
       min-width: 138px;
       cursor: pointer;

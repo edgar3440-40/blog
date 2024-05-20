@@ -5,13 +5,14 @@ import {DefaultResponseType} from "../../../types/default-response.type";
 import {LoginResponseType} from "../../../types/login-response.type";
 import {environment} from "../../../environments/environment";
 import {UserInfoType} from "../../../types/user-info.type";
+import {UserService} from "../../shared/services/user.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private userService: UserService) {
     this.isLogged = !!localStorage.getItem(this.accessTokenKey);
   }
 
@@ -34,6 +35,7 @@ export class AuthService {
   }
 
   signup(name: string ,email: string, password: string): Observable<DefaultResponseType | LoginResponseType> {
+    this.userService.setUserName(name);
     return this.http.post<DefaultResponseType | LoginResponseType>(environment.api + 'signup', {
       name ,email, password
     } );
@@ -46,6 +48,7 @@ export class AuthService {
         refreshToken: tokens.refreshToken
       } );
     }
+    this.userService.clearUserName()
     throw throwError(() => 'Can not find token');
   }
 
@@ -95,5 +98,7 @@ export class AuthService {
     }
     throw throwError(() => 'Can not use token');
   }
+
+
 
 }

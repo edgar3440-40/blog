@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, HostListener } from '@angular/core';
+import {Component, OnInit, ElementRef, HostListener, ViewChild} from '@angular/core';
 import {OwlOptions} from "ngx-owl-carousel-o";
 import {ArticleService} from "../../shared/services/article.service";
 import {ArticleType} from "../../../types/article.type";
@@ -133,12 +133,9 @@ export class MainComponent implements OnInit {
   articleCategory: string = '';
 
   // the forms Validation
-  requestForm = this.fb.group({
-    category: ['', Validators.required],
-    name: ['', Validators.required],
-    phone: ['', [Validators.required, Validators.pattern(/^\d+$/)]]
-  })
 
+
+  @ViewChild('modal') modalElement!: ElementRef;
   // the flag for modal
   modalOpen: boolean = false;
 
@@ -147,7 +144,13 @@ export class MainComponent implements OnInit {
 
   requestSuccessFlag: boolean = false;
 
+  popupWithCategoryFlag: boolean = false;
 
+  requestForm = this.fb.group({
+    category: ['', Validators.required],
+    name: ['', Validators.required],
+    phone: ['', [Validators.required, Validators.pattern(/^\d+$/)]]
+  })
   // the variable where we get the articles category to fill the form of request emitted from the article-component
   constructor(
     private articleService: ArticleService,
@@ -175,7 +178,7 @@ export class MainComponent implements OnInit {
       })
   }
 
-  togglePopup(afterSuccess?: boolean) {
+  togglePopup(afterSuccess?: boolean, withCategory?: boolean) {
     if(afterSuccess) {
       this.requestSuccessFlag = false;
     }
@@ -215,10 +218,8 @@ export class MainComponent implements OnInit {
 
   @HostListener('document:click', ['$event'])
   onClick(event: MouseEvent) {
-    const modalElement = document.getElementById('your-modal-id'); // Replace 'your-modal-id' with the actual ID of your modal
-    if (modalElement && !modalElement.contains(event.target as Node)) {
-      // Clicked outside the modal, so close it
-      this.modalOpen = false;
+    if (this.modalOpen && this.modalElement && !this.modalElement.nativeElement.contains(event.target)) {
+      this.togglePopup();
     }
   }
 }

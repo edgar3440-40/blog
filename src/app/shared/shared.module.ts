@@ -5,21 +5,27 @@ import { ArticleCardComponent } from './components/article-card/article-card.com
 import {RouterModule} from "@angular/router";
 import { FormsModule } from '@angular/forms';
 import { CategoryFilterComponent } from './components/category-filter/category-filter.component';
+import {LoaderComponent} from "./components/loader/loader.component";
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 
 
 @NgModule({
   declarations: [
     ArticleCardComponent,
-    CategoryFilterComponent
+    CategoryFilterComponent,
+    LoaderComponent
   ],
-    exports: [
-        ArticleCardComponent,
-        CategoryFilterComponent
-    ],
   imports: [
     RouterModule,
     CommonModule,
-    FormsModule
-  ]
+    FormsModule,
+    MatProgressSpinnerModule
+  ],
+  exports: [
+    ArticleCardComponent,
+    CategoryFilterComponent,
+    LoaderComponent
+    ]
+
 })
 export class SharedModule { }

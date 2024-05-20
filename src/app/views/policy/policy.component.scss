@@ -1,0 +1,13 @@
+@import "../../../assets/styles/variables";
+
+.policy {
+  padding-bottom: 40px;
+
+  h1,h2 {
+    color: $blue-text-color;
+  }
+
+  p {
+    max-width: 600px;
+  }
+}

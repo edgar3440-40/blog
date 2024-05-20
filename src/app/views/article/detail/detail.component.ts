@@ -14,7 +14,8 @@ import {AuthService} from "../../../core/auth/auth.service";
 import {LikeService} from "../../../shared/services/like.service";
 import {CommentService} from "../../../shared/services/comment.service";
 import {ActiveParamsCommentType} from "../../../../types/active-params-comment.type";
-import {CommentType} from "../../../../types/comment.type";
+import {CommentType, SingleCommentType} from "../../../../types/comment.type";
+import {ArticleActionsType} from "../../../../types/article-actions.type";
 
 
 @Component({
@@ -40,6 +41,9 @@ export class DetailComponent implements OnInit {
   loadMoreClickTimes: number = 0;
   offset: number = 3;
   commentsCount: number = 0;
+  likedCommentFlag: boolean = false;
+  dislikedCommentFlag: boolean = false;
+  articleCommentsActions: ArticleActionsType[] = [];
 
   constructor(private articleService: ArticleService,
               private activatedRoute: ActivatedRoute,
@@ -73,9 +77,25 @@ export class DetailComponent implements OnInit {
               this._snackBar.open('There was an error trying to get the info about the chosen article, please try later!');
             }
             this.article = data as ArticleType;
+
+            if(this.article && this.article.id) {
+              this.likeService.getArticleCommentsActions({articleId: this.article.id})
+                .subscribe({
+                  next: (data: ArticleActionsType[] | DefaultResponseType) => {
+                    this.articleCommentsActions = data as ArticleActionsType[];
+                    console.log(this.articleCommentsActions);
+
+                    this.checkCommentsActions()
+                  },
+                  error: (error: HttpErrorResponse) => {
+                    this._snackBar.open(error.error.message);
+                  }
+                })
+            }
+
             this.commentsCount = this.article.commentsCount as number;
 
-            // checking for load more btn to knmow how many comments do we havw
+            // checking for load more btn to know how many comments do we have
             if(this.article && (this.commentsCount as number) > 3) {
               this.loadMoreBtnFlag = true;
             } else if((this.commentsCount as number) === 0) {
@@ -105,6 +125,8 @@ export class DetailComponent implements OnInit {
         })
     })
 
+
+
   }
 
   sendComment(text: string) {
@@ -118,25 +140,7 @@ export class DetailComponent implements OnInit {
             this.commentInput = '';
 
             this._snackBar.open(data.message);
-            if((this.commentsCount as number) === 0) {
-              this.getComments(1, 0);
-              this.commentsCount++;
-            } else if((this.commentsCount as number) === 1) {
-
-              this.getComments(1, 0);
-              this.commentsCount++;
-            } else if((this.commentsCount as number) === 2) {
-
-              this.getComments(1, 0);
-              this.commentsCount++;
-            } else if((this.commentsCount as number) === 3) {
-              this.loadMoreBtnFlag = true;
-              this.getComments(1, 1);
-              this.commentsCount++;
-            } else {
-              this.getComments(1, this.commentsCount - 3);
-              this.commentsCount++;
-            }
+            this.getComments(0, 0, true);
 
           },
           error: (error: HttpErrorResponse) => {
@@ -147,18 +151,61 @@ export class DetailComponent implements OnInit {
 
   }
 
-  applyAction(action: string) {
-    this.likeService.applyAction(action)
-      .subscribe({
-        next: (data) => {
-          let error = '';
-          if((data as DefaultResponseType).error !== undefined) {
-            error = (data as DefaultResponseType).message;
-            this._snackBar.open('Error please try again!');
+  applyAction(action: string,  comment: SingleCommentType) {
+    if(this.authService.getIsLoggedIn()) {
+      this.likeService.applyAction(action, comment.id)
+        .subscribe({
+          next: (data) => {
+            this._snackBar.open(data.message);
+
+
+
+            this.likeService.getActionsForComment(comment.id)
+              .subscribe((data: DefaultResponseType | ArticleActionsType[]) => {
+                let commentActions = data as ArticleActionsType[];
+
+                if(commentActions.length === 0 && action === 'like') {
+                  comment.likesCount--;
+                  comment.liked = false;
+                } else if(commentActions.length === 0 && action === 'dislike') {
+                  comment.dislikesCount--;
+                  comment.disliked = false;
+                }
+                else if (comment.id === commentActions[0].comment) {
+                  if (commentActions[0].action === 'like') {
+                    if(comment.disliked === true) {
+                      comment.dislikesCount -= 1;
+                    }
+                    comment.liked = true;
+                    comment.disliked = false;
+                    comment.likesCount += 1;
+
+                    if (comment.dislikesCount > 0) {
+                      comment.dislikesCount -= 1;
+                    }
+                  } else if (commentActions[0].action === 'dislike') {
+                    if(comment.liked === true) {
+                      comment.likesCount -= 1;
+                    }
+                    comment.disliked = true;
+                    comment.liked = false;
+                    comment.dislikesCount += 1;
+
+                  }
+                }
+
+              })
+          },
+          error: (error: HttpErrorResponse) => {
+            this._snackBar.open(error.error.message);
           }
-        }
-      })
+        });
+    } else {
+      this._snackBar.open('Please login or sign up to apply actions')
+    }
+
   }
+
 
   loadMoreComments() {
     // Increment the click counter
@@ -180,22 +227,28 @@ export class DetailComponent implements OnInit {
       // Load the remaining comments and hide the "Load More" button
       this.getComments(remainingComments, this.offset);
       this.loadMoreBtnFlag = false;
+
       console.log('Comments are over');
-    } else if (this.offset < totalComments) {
+    } else if (remainingComments > 10) {
       // For the first click, loading the first 10 comments starting from the third
       if (this.loadMoreClickTimes === 1) {
         this.getComments(10, 3);
       } else {
         // For subsequent clicks, updating the offset and load the next batch of 10 comments
         this.offset += 10;
-        this.getComments(10, this.offset - 10);
+        this.getComments(totalComments - this.offset, this.offset);
+        if(totalComments - this.offset < 10) {
+          this.loadMoreBtnFlag = false;
+        }
       }
     }
   }
 
-  getComments(cycleLength: number, offset: number) {
+  getComments(cycleLength: number, offset: number, addCommentFlag: boolean = false) {
     if(offset) {
       this.activeParamsComment.offset = offset;
+    } else if(offset === 0) {
+      this.activeParamsComment.offset = 0;
     }
     this.commentService.getComments(this.activeParamsComment)
       .subscribe({
@@ -205,16 +258,60 @@ export class DetailComponent implements OnInit {
           }
           this.comments = commentData as CommentType;
 
-          // if(this.commentsCount > 4) {
-          //   this.article.comments = this.comments.comments;
-          // }
-           if(this.article && this.article.comments) {
+          this.commentsCount = this.comments.allCount;
+
+          if(this.article && this.article.comments && !addCommentFlag) {
+              //if it is not adding comments then just do the request then push the gotten items to the article.comments
               for (let i = 0; i < cycleLength; i++) {
                 this.article.comments.push(this.comments.comments[i]);
               }
+
+              // assuring there are no undefined items in the article.comments
+
+            this.article.comments = this.article.comments?.filter(comment => comment !== undefined);
+            console.log(this.article.comments.length);
+          } else if(this.article && this.article.comments && addCommentFlag) {
+            if(this.article.comments.length <= 3) {
+              if(this.commentsCount > 3) {
+                //checking if the amount are more then 3 then by adding the new comment the loadMoreBtn appears
+                this.loadMoreBtnFlag = true;
+              }
+              this.article.comments = [];
+              this.article.comments.push(...this.comments.comments.slice(0, 3));
+              // this.loadMoreBtnFlag = true;
+
+            } else if(this.commentsCount > this.article.comments.length)  {
+              console.log(this.comments);
+              this.article.comments.unshift(...this.comments.comments.slice(0, 1));
+              this.article.comments.pop();
+              this.loadMoreBtnFlag = true;
+            } else  {
+              this.article.comments.unshift(...this.comments.comments.slice(0, 1));
+            }
           }
+
+          // checking if the new comments are liked or disliked by the current user
+          this.checkCommentsActions();
 
         }
       })
+  }
+
+  checkCommentsActions() {
+    this.articleCommentsActions.forEach(commentAction => {
+
+      (this.article.comments as SingleCommentType[]).forEach(comment => {
+
+        if(comment.id === commentAction.comment && commentAction.action === 'like') {
+          comment.liked = true;
+          comment.disliked = false;
+        } else if (comment.id === commentAction.comment && commentAction.action === 'dislike') {
+          comment.disliked = true;
+          comment.liked = false;
+        }
+      });
+
+    })
+
   }
 }

@@ -6,6 +6,8 @@ import {DefaultResponseType} from "../../../../types/default-response.type";
 import {Router} from "@angular/router";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {HttpErrorResponse} from "@angular/common/http";
+import {UserInfoType} from "../../../../types/user-info.type";
+import {UserService} from "../../../shared/services/user.service";
 
 @Component({
   selector: 'app-login',
@@ -14,13 +16,17 @@ import {HttpErrorResponse} from "@angular/common/http";
 })
 export class LoginComponent implements OnInit {
 
-  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router, private _snackBar: MatSnackBar) { }
+  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router,
+              private _snackBar: MatSnackBar, private userService: UserService) { }
 
   loginForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.pattern(/^(?=.*[A-Z])(?=.*\d).{8,}$/)]],
     rememberMe: [false],
   })
+
+  userInfo!: UserInfoType;
+
   ngOnInit(): void {
 
 
@@ -52,8 +58,23 @@ export class LoginComponent implements OnInit {
               error = 'Error during authorization';
             }
 
+
             this.authService.setTokens(loginResponse.accessToken, loginResponse.refreshToken);
             this.authService.userId = loginResponse.userId;
+
+            this.authService.getUserInfo()
+              .subscribe({
+                next: (data: UserInfoType | DefaultResponseType) => {
+                  if((data as DefaultResponseType).error) {
+                    this._snackBar.open('There is an Error during getting the name')
+                  }
+
+                  this.userInfo = data as UserInfoType;
+                  this.userService.setUserName(this.userInfo.name);
+
+
+                }
+              })
 
             this.router.navigate(['/']);
           },

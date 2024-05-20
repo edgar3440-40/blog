@@ -1,35 +1,42 @@
-import { Component, OnInit } from '@angular/core';
+import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {AuthService} from "../../../core/auth/auth.service";
 import {UserInfoType} from "../../../../types/user-info.type";
 import {DefaultResponseType} from "../../../../types/default-response.type";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {Router} from "@angular/router";
+import {UserService} from "../../services/user.service";
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, AfterViewInit {
 
 
   isLogged: boolean = false;
-  userName: string = '';
+  userName!: string;
 
 
 
-  constructor(private authService: AuthService, private _snackBar: MatSnackBar, private router: Router) {
+  constructor(private authService: AuthService, private _snackBar: MatSnackBar, private router: Router, private userService: UserService) {
     this.isLogged = this.authService.getIsLoggedIn();
   }
 
 
 
   ngOnInit(): void {
-
-
     this.authService.isLogged$.subscribe((isLoggedIn: boolean) => {
       this.isLogged = isLoggedIn;
     });
+
+    this.userService.userName$.subscribe((userName: string | null) => {
+      this.userName = userName as string;
+    })
+
+  }
+
+  ngAfterViewInit(): void {
     if(this.isLogged) {
       this.userName = localStorage.getItem('userName') as string;
     }
@@ -46,6 +53,7 @@ export class HeaderComponent implements OnInit {
         }
       });
   }
+
   doLogout(): void {
     this.authService.removeTokens();
     this.authService.userId = null;

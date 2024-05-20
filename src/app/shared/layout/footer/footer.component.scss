@@ -43,6 +43,14 @@
         .footer-bottom-item {
           max-width: 253px;
 
+          &.email {
+            text-decoration: none;
+
+            .footer-bottom-item-text {
+              color: black;
+            }
+          }
+
           .footer-bottom-item-title {
             color: $blue-text-color;
             font-family: 'Monsterat', sans-serif;
@@ -50,8 +58,9 @@
           }
 
           &.telephone {
-            button {
+            a {
               cursor: pointer !important;
+              padding: 10px 20px;
               margin-top: 10px;
               width: 153px;
               height: 36px;
@@ -60,6 +69,7 @@
               border: none;
               background-color: rgb(112, 159, 220);
               color: #FFF;
+              box-sizing: border-box;
             }
           }
 

@@ -7,26 +7,26 @@
     <nav class="header-menu">
       <ul class="header-menu-items">
         <li class="header-menu-item">
-          <a  class="header-menu-link">Услуги</a>
+          <a  class="header-menu-link"  routerLink="/" fragment="services">Услуги</a>
         </li>
         <li class="header-menu-item">
-          <a  class="header-menu-link">О нас</a>
+          <a  class="header-menu-link" routerLinkActive="active" routerLink="/policy">О нас</a>
         </li>
         <li class="header-menu-item">
-          <a routerLink="/articles"  class="header-menu-link">Статьи</a>
+          <a routerLink="/articles" routerLinkActive="active" class="header-menu-link">Статьи</a>
         </li>
         <li class="header-menu-item">
-          <a  class="header-menu-link">Отзывы</a>
+          <a  class="header-menu-link"  routerLink="/" fragment="reviews">Отзывы</a>
         </li>
         <li class="header-menu-item">
-          <a  class="header-menu-link">Контакты</a>
+          <a  class="header-menu-link"  routerLink="/" fragment="contacts">Контакты</a>
         </li>
       </ul>
     </nav>
 
-    <div class="phone-number header-phone-number">
+    <a href="tel:74993431334" class="phone-number header-phone-number">
       +7 (499) 343-13-34
-    </div>
+    </a>
 
     <a class="header-login" >
       <div class="header-login-icon">

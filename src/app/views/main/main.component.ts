@@ -7,8 +7,8 @@ import { RequestService } from 'src/app/shared/services/request.service';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {HttpErrorResponse} from "@angular/common/http";
-import {ArticleUnusualType} from "../../../types/article-unusual.type";
-
+import {Dialog} from "@angular/cdk/dialog";
+import {ModalComponent} from "../../shared/components/modal/modal.component";
 @Component({
   selector: 'app-main-detail',
   templateUrl: './main.component.html',
@@ -142,22 +142,18 @@ export class MainComponent implements OnInit {
   // The variable where we asign the articles got from the back
   articles: ArticleType[] = [];
 
-  requestSuccessFlag: boolean = false;
 
   popupWithCategoryFlag: boolean = false;
 
-  requestForm = this.fb.group({
-    category: ['', Validators.required],
-    name: ['', Validators.required],
-    phone: ['', [Validators.required, Validators.pattern(/^\d+$/)]]
-  })
+
   // the variable where we get the articles category to fill the form of request emitted from the article-component
   constructor(
     private articleService: ArticleService,
     private elementRef: ElementRef,
-    private requestService: RequestService,
     private fb: FormBuilder,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private requestService: RequestService,
+    private dialog: Dialog
     ) {
 
 
@@ -166,7 +162,7 @@ export class MainComponent implements OnInit {
   ngOnInit(): void {
 
 
-    // geting the popular articles
+    // getting the popular articles
     this.articleService.getPopularArticles()
       .subscribe({
         next: (data: ArticleType[] | DefaultResponseType) => {
@@ -178,48 +174,16 @@ export class MainComponent implements OnInit {
       })
   }
 
-  togglePopup(afterSuccess?: boolean, withCategory?: boolean) {
-    if(afterSuccess) {
-      this.requestSuccessFlag = false;
-    }
-    this.modalOpen = !this.modalOpen;
+  togglePopup() {
+
+    this.requestService.setArticleCategory(this.articleCategory);
+    this.requestService.setIsConsultation(false);
+    this.dialog.open(ModalComponent)
   }
 
   getArticleCategory(value: string) {
     // we get the emitted value and asign it to the variable
     this.articleCategory = value;
-    this.requestForm.get('category')?.setValue(this.articleCategory)
   }
 
-  doRequest() {
-    // the func where we send the request of consultation to the back. We use the requestService.
-    if(this.requestForm.value.category && this.requestForm.value.name && this.requestForm.value.phone) {
-      this.requestService.doRequest(this.requestForm.value.category, this.requestForm.value.name, this.requestForm.value.phone, 'order')
-        .subscribe({
-          next: (data: DefaultResponseType) => {
-            if((data as DefaultResponseType).error ) {
-              throw new Error((data as DefaultResponseType).message);
-            }
-            this.requestSuccessFlag = true;
-            this.requestForm.reset();
-          },
-          error: (error: HttpErrorResponse) => {
-            if(error.error && error.error.message) {
-              this._snackBar.open(error.error.message);
-            } else {
-              this._snackBar.open('Error during sending the request, please try later. Thank you!!!');
-            }
-          }
-        })
-
-    }
-  }
-
-
-  @HostListener('document:click', ['$event'])
-  onClick(event: MouseEvent) {
-    if (this.modalOpen && this.modalElement && !this.modalElement.nativeElement.contains(event.target)) {
-      this.togglePopup();
-    }
-  }
 }

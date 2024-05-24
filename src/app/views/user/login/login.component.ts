@@ -25,7 +25,11 @@ export class LoginComponent implements OnInit {
     rememberMe: [false],
   })
 
+  password: string = 'password';
+
   userInfo!: UserInfoType;
+
+  showPassword: boolean = false;
 
   ngOnInit(): void {
 
@@ -89,6 +93,16 @@ export class LoginComponent implements OnInit {
 
     }
 
+  }
+
+  togglePassword() {
+    if (this.password === 'password') {
+      this.password = 'text';
+      this.showPassword = true;
+    } else {
+      this.password = 'password';
+      this.showPassword = false;
+    }
   }
 
 }

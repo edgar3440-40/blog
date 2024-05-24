@@ -4,6 +4,8 @@ import {DefaultResponseType} from "../../../../types/default-response.type";
 import {HttpErrorResponse} from "@angular/common/http";
 import {RequestService} from "../../services/request.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {Dialog} from "@angular/cdk/dialog";
+import {ModalComponent} from "../../components/modal/modal.component";
 
 @Component({
   selector: 'app-footer',
@@ -21,39 +23,19 @@ export class FooterComponent implements OnInit {
     phone: ['', [Validators.required, Validators.pattern(/^\d+$/)]]
   })
 
-  constructor(private fb: FormBuilder, private requestService: RequestService, private _snackBar: MatSnackBar) { }
+  constructor(private fb: FormBuilder, private requestService: RequestService, private _snackBar: MatSnackBar,
+              private dialog: Dialog) { }
 
   ngOnInit(): void {
   }
 
   togglePopup(afterSuccess?: boolean) {
-    if(afterSuccess) {
-      this.requestSuccessFlag = false;
-    }
-    this.modalOpen = !this.modalOpen;
+    this.dialog.open(ModalComponent);
+    this.requestService.setIsConsultation(true);
   }
 
   doRequest() {
     // the func where we send the request of consultation to the back. We use the requestService.
-    if( this.requestForm.value.name && this.requestForm.value.phone) {
-      this.requestService.doRequest(this.requestForm.value.name, this.requestForm.value.phone, 'consultation')
-        .subscribe({
-          next: (data: DefaultResponseType) => {
-            if((data as DefaultResponseType).error ) {
-              throw new Error((data as DefaultResponseType).message);
-            }
-            this.requestSuccessFlag = true;
-            this.requestForm.reset();
-          },
-          error: (error: HttpErrorResponse) => {
-            if(error.error && error.error.message) {
-              this._snackBar.open(error.error.message);
-            } else {
-              this._snackBar.open('Error during sending the request, please try later. Thank you!!!');
-            }
-          }
-        })
 
-    }
   }
 }

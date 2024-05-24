@@ -73,33 +73,33 @@
 
   </div>
 
-  <div class="modal" #modalElement [className]="modalOpen ? 'modal open' : 'modal'">
-    <div class="modal-close" (click)="togglePopup()">
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <line x1="0.935622" y1="0.649994" x2="12.9564" y2="12.6708" stroke="#BEBEBE" stroke-linecap="round"/>
-        <line x1="12.9236" y1="0.629775" x2="0.902769" y2="12.6506" stroke="#BEBEBE" stroke-linecap="round"/>
-      </svg>
+<!--  <div class="modal" #modalElement [className]="modalOpen ? 'modal open' : 'modal'">-->
+<!--    <div class="modal-close" (click)="togglePopup()">-->
+<!--      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">-->
+<!--        <line x1="0.935622" y1="0.649994" x2="12.9564" y2="12.6708" stroke="#BEBEBE" stroke-linecap="round"/>-->
+<!--        <line x1="12.9236" y1="0.629775" x2="0.902769" y2="12.6506" stroke="#BEBEBE" stroke-linecap="round"/>-->
+<!--      </svg>-->
 
-    </div>
-    <div class="modal-title consultation"  *ngIf="!requestSuccessFlag">
-      Закажите бесплатную
-      консультацию!
-    </div>
-    <div class="modal-title" *ngIf="requestSuccessFlag">
-      Спасибо за вашу заявку!
-    </div>
-    <div class="modal-text" *ngIf="requestSuccessFlag">
-      Мы свяжемся с вами при первой же возможности.
-    </div>
-    <div class="modal-inputs" [formGroup]="requestForm" *ngIf="!requestSuccessFlag">
-      <input type="text" formControlName="name" class="input modal-input" placeholder="Ваше имя">
-      <input type="text" formControlName="phone" class="input modal-input" placeholder="Ваш номер телефона">
-      <span *ngIf="requestForm.get('phone')?.touched && requestForm.get('phone')?.invalid" style="color: red;">May contain only numbers</span>
-    </div>
+<!--    </div>-->
+<!--    <div class="modal-title consultation"  *ngIf="!requestSuccessFlag">-->
+<!--      Закажите бесплатную-->
+<!--      консультацию!-->
+<!--    </div>-->
+<!--    <div class="modal-title" *ngIf="requestSuccessFlag">-->
+<!--      Спасибо за вашу заявку!-->
+<!--    </div>-->
+<!--    <div class="modal-text" *ngIf="requestSuccessFlag">-->
+<!--      Мы свяжемся с вами при первой же возможности.-->
+<!--    </div>-->
+<!--    <div class="modal-inputs" [formGroup]="requestForm" *ngIf="!requestSuccessFlag">-->
+<!--      <input type="text" formControlName="name" class="input modal-input" placeholder="Ваше имя">-->
+<!--      <input type="text" formControlName="phone" class="input modal-input" placeholder="Ваш номер телефона">-->
+<!--      <span *ngIf="requestForm.get('phone')?.touched && requestForm.get('phone')?.invalid" style="color: red;">May contain only numbers</span>-->
+<!--    </div>-->
 
-    <button class="btn request-btn" (click)="doRequest()" [disabled]="requestForm.invalid" *ngIf="!requestSuccessFlag">
-      Оставить заявку
-    </button>
-    <button class="btn request-btn-success" *ngIf="requestSuccessFlag" (click)="togglePopup(true)">Окей</button>
-  </div>
+<!--    <button class="btn request-btn" (click)="doRequest()" [disabled]="requestForm.invalid" *ngIf="!requestSuccessFlag">-->
+<!--      Оставить заявку-->
+<!--    </button>-->
+<!--    <button class="btn request-btn-success" *ngIf="requestSuccessFlag" (click)="togglePopup(true)">Окей</button>-->
+<!--  </div>-->
 </footer>

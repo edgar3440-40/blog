@@ -18,6 +18,9 @@ import {CarouselModule} from "ngx-owl-carousel-o";
 import {CommonModule} from "@angular/common";
 import {MainComponent} from "./views/main/main.component";
 import { PolicyComponent } from './views/policy/policy.component';
+import {MAT_DIALOG_DEFAULT_OPTIONS} from "@angular/material/dialog";
+import {DialogModule} from "@angular/cdk/dialog";
+import {MAT_FORM_FIELD_DEFAULT_OPTIONS, MatFormFieldModule} from "@angular/material/form-field";
 
 
 @NgModule({
@@ -40,12 +43,15 @@ import { PolicyComponent } from './views/policy/policy.component';
     MatSnackBarModule,
     CarouselModule,
     MatMenuModule,
+    DialogModule,
     AppRoutingModule,
 
   ],
   providers: [
     {provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: {duration: 2500}},
-    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi : true}
+    {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {duration: 2500}},
+    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi : true},
+
   ],
   bootstrap: [AppComponent]
 })

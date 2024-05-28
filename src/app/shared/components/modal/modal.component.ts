@@ -1,55 +1,54 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {FormBuilder, Validators} from "@angular/forms";
+import {Component, Inject, OnInit} from '@angular/core';
+import {FormBuilder, Validators, FormControl} from "@angular/forms";
 import {DefaultResponseType} from "../../../../types/default-response.type";
 import {HttpErrorResponse} from "@angular/common/http";
 import {RequestService} from "../../services/request.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {Dialog} from "@angular/cdk/dialog";
-
+import {Dialog, DIALOG_DATA} from "@angular/cdk/dialog";
+import {ModalDataType} from "../../../../types/modal-data.type";
 
 @Component({
-  selector: 'app-modal',
+  selector: 'modal',
   templateUrl: './modal.component.html',
   styleUrls: ['./modal.component.scss']
 })
 export class ModalComponent implements OnInit {
 
-  @Input() articleCategory!: string;
+   articleCategory!: string;
 
   categories = ['Создание сайтов', 'Продвижение', 'Реклама', 'Копирайтинг'];
   categoriesSelect!: string[];
 
   requestForm = this.fb.group({
-    category: [this.articleCategory, Validators.required],
+    category: [''],
     name: ['', Validators.required],
     phone: ['', [Validators.required, Validators.pattern(/^\d+$/)]]
   })
+
   requestSuccessFlag: boolean = false;
 
   isConsultation: boolean = false;
 
 
-  constructor(private requestService: RequestService, private fb: FormBuilder, private _snackBar: MatSnackBar, private dialog: Dialog) { }
+  constructor(private requestService: RequestService ,private fb: FormBuilder,
+              private _snackBar: MatSnackBar, private dialog: Dialog, @Inject(DIALOG_DATA) private data: ModalDataType ) { }
 
   ngOnInit(): void {
-
-    this.requestService.articleCategory$.subscribe(category => {
-      this.articleCategory = category;
-    });
-   this.requestService.isConsultation$.subscribe(isConsultation => {
-      this.isConsultation = isConsultation;
-    });
+    if(this.data.category) {
+      this.articleCategory = this.data.category;
+    }
+    if(this.data.isConsultation) {
+      this.isConsultation = this.data.isConsultation;
+    }
 
     this.categoriesSelect = this.categories.filter(category => category !== this.articleCategory)
 
     this.requestForm.get('category')?.patchValue(this.articleCategory);
 
-
-
-
+    this.requestForm.addControl('category', new FormControl(this.articleCategory, Validators.required))
   }
 
-  closePopup(afterSuccess?: boolean) {
+  closePopup() {
     this.dialog.closeAll();
   }
 
@@ -95,7 +94,5 @@ export class ModalComponent implements OnInit {
 
     }
   }
-
-
 
 }

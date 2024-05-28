@@ -11,13 +11,11 @@ import {UserService} from "../../services/user.service";
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent implements OnInit, AfterViewInit {
+export class HeaderComponent implements OnInit {
 
 
   isLogged: boolean = false;
   userName!: string;
-
-
 
   constructor(private authService: AuthService, private _snackBar: MatSnackBar, private router: Router, private userService: UserService) {
     this.isLogged = this.authService.getIsLoggedIn();
@@ -36,11 +34,6 @@ export class HeaderComponent implements OnInit, AfterViewInit {
 
   }
 
-  ngAfterViewInit(): void {
-    if(this.isLogged) {
-      this.userName = localStorage.getItem('userName') as string;
-    }
-  }
 
   logout(): void {
     this.authService.logout()

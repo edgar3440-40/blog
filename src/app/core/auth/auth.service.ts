@@ -12,17 +12,16 @@ import {UserService} from "../../shared/services/user.service";
 })
 export class AuthService {
 
-  constructor(private http: HttpClient, private userService: UserService) {
-    this.isLogged = !!localStorage.getItem(this.accessTokenKey);
-  }
-
 
   public accessTokenKey: string = 'accessToken';
   public refreshTokenKey: string = 'refreshToken';
   public userIdKey: string = 'userId';
 
   public isLogged$: Subject<boolean> = new Subject<boolean>();
-  private isLogged: boolean = false;
+  private isLogged: boolean = !!localStorage.getItem(this.accessTokenKey);
+
+  constructor(private http: HttpClient, private userService: UserService) {
+  }
 
   public getIsLoggedIn() {
     return this.isLogged;

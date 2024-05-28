@@ -18,7 +18,7 @@ export class ArticleCardComponent implements OnInit {
   modalIsCalled(category: string) {
     this.category = category;
     this.articleTitle.emit(this.category);
-    this.modal.emit(this.modalCalled);
+    // this.modal.emit(this.modalCalled);
   }
 
   isOnMain: boolean = true;

@@ -111,8 +111,7 @@
 
       <div class="articles-items">
         <article-card *ngFor="let service of services" [article]="service" [usual]="false"
-                      (articleTitle)="getArticleCategory($event)"
-                      (modal)="togglePopup()"></article-card>
+                      (articleTitle)="setArticleCategory($event)"></article-card>
       </div>
     </div>
 

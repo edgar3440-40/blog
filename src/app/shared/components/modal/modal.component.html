@@ -27,6 +27,6 @@
   <button class="btn request-btn" (click)="doRequest()" [disabled]="requestForm.invalid" *ngIf="!requestSuccessFlag">
     Оставить заявку
   </button>
-  <button class="btn request-btn-success" *ngIf="requestSuccessFlag" (click)="closePopup(true)">Окей</button>
+  <button class="btn request-btn-success" *ngIf="requestSuccessFlag" (click)="closePopup()">Окей</button>
 </div>
 

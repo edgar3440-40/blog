@@ -4,11 +4,11 @@ import {ArticleService} from "../../shared/services/article.service";
 import {ArticleType} from "../../../types/article.type";
 import {DefaultResponseType} from "../../../types/default-response.type";
 import { RequestService } from 'src/app/shared/services/request.service';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import {HttpErrorResponse} from "@angular/common/http";
 import {Dialog} from "@angular/cdk/dialog";
 import {ModalComponent} from "../../shared/components/modal/modal.component";
+import {ModalDataType} from "../../../types/modal-data.type";
 @Component({
   selector: 'app-main-detail',
   templateUrl: './main.component.html',
@@ -130,20 +130,12 @@ export class MainComponent implements OnInit {
     },
   ]
 
-  articleCategory: string = '';
 
-  // the forms Validation
-
-
-  @ViewChild('modal') modalElement!: ElementRef;
-  // the flag for modal
-  modalOpen: boolean = false;
 
   // The variable where we asign the articles got from the back
   articles: ArticleType[] = [];
 
 
-  popupWithCategoryFlag: boolean = false;
 
 
   // the variable where we get the articles category to fill the form of request emitted from the article-component
@@ -175,15 +167,12 @@ export class MainComponent implements OnInit {
   }
 
   togglePopup() {
-
-    this.requestService.setArticleCategory(this.articleCategory);
-    this.requestService.setIsConsultation(false);
     this.dialog.open(ModalComponent)
   }
 
-  getArticleCategory(value: string) {
-    // we get the emitted value and asign it to the variable
-    this.articleCategory = value;
+  setArticleCategory(value: string) {
+    const data : ModalDataType = {category: value, isConsultation: false}
+    this.dialog.open(ModalComponent, {data})
   }
 
 }

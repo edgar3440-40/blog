@@ -15,16 +15,5 @@ export class RequestService {
     return this.http.post<DefaultResponseType>(environment.api + 'requests', {name, phone, service, type})
   }
 
-  private articleCategorySource = new BehaviorSubject<string>('defaultCategory');
-  articleCategory$ = this.articleCategorySource.asObservable();
 
-  setArticleCategory(category: string) {
-    this.articleCategorySource.next(category);
-  }
-  private isConsultation = new BehaviorSubject<boolean>(false);
-  isConsultation$ = this.isConsultation.asObservable();
-
-  setIsConsultation(category: boolean) {
-    this.isConsultation.next(category);
-  }
 }

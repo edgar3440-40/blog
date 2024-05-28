@@ -6,6 +6,7 @@ import {RequestService} from "../../services/request.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {Dialog} from "@angular/cdk/dialog";
 import {ModalComponent} from "../../components/modal/modal.component";
+import {ModalDataType} from "../../../../types/modal-data.type";
 
 @Component({
   selector: 'app-footer',
@@ -30,12 +31,10 @@ export class FooterComponent implements OnInit {
   }
 
   togglePopup(afterSuccess?: boolean) {
-    this.dialog.open(ModalComponent);
-    this.requestService.setIsConsultation(true);
-  }
 
-  doRequest() {
-    // the func where we send the request of consultation to the back. We use the requestService.
+    const data : ModalDataType = {isConsultation: true}
+    this.dialog.open(ModalComponent, {data});
 
   }
+
 }

@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import {ArticleService} from "../../../shared/services/article.service";
-import {ArticleType} from "../../../../types/article.type";
-import {DefaultResponseType} from "../../../../types/default-response.type";
 import {ArticlesArrayType} from "../../../../types/articles-array.type";
 import {AppliedFilterType} from "../../../../types/applied-filter.type";
 import {CategoriesService} from "../../../shared/services/categories.service";
@@ -26,7 +24,6 @@ export class CatalogComponent implements OnInit {
   pages: number[] = [];
 
   activeFlag: boolean = false;
-  filterUrlParam: string = '';
 
   constructor(private articleService: ArticleService, private categoriesService: CategoriesService,
               private activatedRoute: ActivatedRoute,
@@ -94,9 +91,6 @@ export class CatalogComponent implements OnInit {
     this.filterOpen = !this.filterOpen;
   }
 
-  getIfOneOfCategoriesChosen(value: any) {
-   return this.filterOpen = value as boolean;
-  }
 
   openPrevPage() {
     if(this.activeParams.page && this.activeParams.page > 1) {

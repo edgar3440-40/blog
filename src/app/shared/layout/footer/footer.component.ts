@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {FormBuilder, Validators} from "@angular/forms";
-import {DefaultResponseType} from "../../../../types/default-response.type";
-import {HttpErrorResponse} from "@angular/common/http";
+import {FormBuilder} from "@angular/forms";
 import {RequestService} from "../../services/request.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {Dialog} from "@angular/cdk/dialog";
@@ -19,10 +17,7 @@ export class FooterComponent implements OnInit {
 
   requestSuccessFlag: boolean = false;
 
-  requestForm = this.fb.group({
-    name: ['', Validators.required],
-    phone: ['', [Validators.required, Validators.pattern(/^\d+$/)]]
-  })
+
 
   constructor(private fb: FormBuilder, private requestService: RequestService, private _snackBar: MatSnackBar,
               private dialog: Dialog) { }
@@ -30,7 +25,7 @@ export class FooterComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  togglePopup(afterSuccess?: boolean) {
+  togglePopup() {
 
     const data : ModalDataType = {isConsultation: true}
     this.dialog.open(ModalComponent, {data});

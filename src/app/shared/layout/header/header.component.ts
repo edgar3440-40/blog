@@ -1,7 +1,5 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import {AuthService} from "../../../core/auth/auth.service";
-import {UserInfoType} from "../../../../types/user-info.type";
-import {DefaultResponseType} from "../../../../types/default-response.type";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {Router} from "@angular/router";
 import {UserService} from "../../services/user.service";
